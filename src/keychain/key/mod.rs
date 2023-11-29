@@ -63,6 +63,14 @@ impl Key {
         Ok(unsafe { Key::wrap_under_create_rule(result) })
     }
 
+    /// If self is a private key, derive the public key for it.
+    pub fn public(&self) -> Result<Self, Error> {
+        let result = unsafe { SecKeyCopyPublicKey(self.as_concrete_TypeRef()) };
+        assert!(!result.is_null());
+
+        Ok(unsafe { Key::wrap_under_get_rule(result) })
+    }
+
     /// Get the `AttrApplicationLabel` for this `Key`.
     pub fn application_label(&self) -> Option<AttrApplicationLabel> {
         self.attributes()
