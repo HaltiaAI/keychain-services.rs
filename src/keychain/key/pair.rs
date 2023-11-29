@@ -1,6 +1,7 @@
 use super::*;
-use crate::{access::AccessControl, dictionary::*, error::Error};
+use crate::{access::AccessControl, dictionary::*, error::Error, attr::*, keychain::Keychain};
 use core_foundation::base::TCFType;
+use core_foundation::data::CFData;
 use std::ptr;
 
 /// Public key pairs (i.e. public and private key) stored in the keychain.
@@ -23,7 +24,7 @@ impl KeyPair {
     pub fn create(params: KeyPairGenerateParams) -> Result<KeyPair, Error> {
         let mut error: CFErrorRef = ptr::null_mut();
         let private_key_ref: KeyRef = unsafe {
-            SecKeyCreateRandomKey(Dictionary::from(params).as_concrete_TypeRef(), &mut error)
+            SecKeyCreateRandomKey(Dictionary::from(params.clone()).as_concrete_TypeRef(), &mut error)
         };
         if private_key_ref.is_null() {
             Err(error.into())
@@ -32,9 +33,27 @@ impl KeyPair {
             assert!(!public_key_ref.is_null());
             assert!(!private_key_ref.is_null());
 
+            let public_key = unsafe { Key::wrap_under_create_rule(public_key_ref) };
+
+            /*
+            let public_key_base_ref = public_key.to_external_representation().unwrap();
+            let data = CFData::from_buffer(&public_key_base_ref);
+
+            let mut attrs = DictionaryBuilder::new();
+            attrs.add_class(item::Class::Key);
+            attrs.add_attr(&AttrKeyType::EcSecPrimeRandom);
+            attrs.add_attr(&AttrKeyClass::Public);
+            attrs.add(unsafe { kSecValueData }, &data);
+
+            println!("got here.");
+            Keychain::default().add_item(attrs)?;
+
+            println!("finished...");
+            */
+
             Ok(unsafe {
                 KeyPair {
-                    public_key: Key::wrap_under_create_rule(public_key_ref),
+                    public_key,
                     private_key: Key::wrap_under_create_rule(private_key_ref),
                 }
             })

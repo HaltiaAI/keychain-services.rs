@@ -68,7 +68,7 @@ impl Key {
         let result = unsafe { SecKeyCopyPublicKey(self.as_concrete_TypeRef()) };
         assert!(!result.is_null());
 
-        Ok(unsafe { Key::wrap_under_get_rule(result) })
+        Ok(unsafe { Key::wrap_under_create_rule(result) })
     }
 
     /// Get the `AttrApplicationLabel` for this `Key`.

@@ -137,8 +137,10 @@ impl Keychain {
             unsafe { SecItemAdd(Dictionary::from(attrs).as_concrete_TypeRef(), &mut result) };
 
         if let Some(e) = Error::maybe_from_OSStatus(status) {
+            println!("super duper {:?}.", e);
             Err(e)
         } else {
+            println!("fuck you.");
             Ok(unsafe { Item::wrap_under_create_rule(result) })
         }
     }
