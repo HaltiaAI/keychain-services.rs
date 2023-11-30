@@ -240,7 +240,102 @@ impl KeyAlgorithm {
     /// a particular cryptographic algorithm.
     pub fn as_CFString(self) -> CFString {
         unsafe {
-            CFString::wrap_under_get_rule(match self {
+            #[cfg(not(target_os = "macos"))]
+            return CFString::wrap_under_get_rule(match self {
+                KeyAlgorithm::RSAEncryptionRaw => kSecKeyAlgorithmRSAEncryptionRaw,
+                KeyAlgorithm::RSAEncryptionPKCS1 => kSecKeyAlgorithmRSAEncryptionPKCS1,
+                KeyAlgorithm::RSAEncryptionOAEPSHA1 => kSecKeyAlgorithmRSAEncryptionOAEPSHA1,
+                KeyAlgorithm::RSAEncryptionOAEPSHA224 => kSecKeyAlgorithmRSAEncryptionOAEPSHA224,
+                KeyAlgorithm::RSAEncryptionOAEPSHA256 => kSecKeyAlgorithmRSAEncryptionOAEPSHA256,
+                KeyAlgorithm::RSAEncryptionOAEPSHA384 => kSecKeyAlgorithmRSAEncryptionOAEPSHA384,
+                KeyAlgorithm::RSAEncryptionOAEPSHA512 => kSecKeyAlgorithmRSAEncryptionOAEPSHA512,
+                KeyAlgorithm::RSAEncryptionOAEPSHA1AESGCM => {
+                    kSecKeyAlgorithmRSAEncryptionOAEPSHA1AESGCM
+                }
+                KeyAlgorithm::RSAEncryptionOAEPSHA224AESGCM => {
+                    kSecKeyAlgorithmRSAEncryptionOAEPSHA224AESGCM
+                }
+                KeyAlgorithm::RSAEncryptionOAEPSHA256AESGCM => {
+                    kSecKeyAlgorithmRSAEncryptionOAEPSHA256AESGCM
+                }
+                KeyAlgorithm::RSAEncryptionOAEPSHA384AESGCM => {
+                    kSecKeyAlgorithmRSAEncryptionOAEPSHA384AESGCM
+                }
+                KeyAlgorithm::RSAEncryptionOAEPSHA512AESGCM => {
+                    kSecKeyAlgorithmRSAEncryptionOAEPSHA512AESGCM
+                }
+                KeyAlgorithm::RSASignatureRaw => kSecKeyAlgorithmRSASignatureRaw,
+                KeyAlgorithm::RSASignatureDigestPKCS1v15Raw => {
+                    kSecKeyAlgorithmRSASignatureDigestPKCS1v15Raw
+                }
+                KeyAlgorithm::RSASignatureDigestPKCS1v15SHA1 => {
+                    kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA1
+                }
+                KeyAlgorithm::RSASignatureDigestPKCS1v15SHA224 => {
+                    kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA224
+                }
+                KeyAlgorithm::RSASignatureDigestPKCS1v15SHA256 => {
+                    kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA256
+                }
+                KeyAlgorithm::RSASignatureDigestPKCS1v15SHA384 => {
+                    kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA384
+                }
+                KeyAlgorithm::RSASignatureDigestPKCS1v15SHA512 => {
+                    kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA512
+                }
+                KeyAlgorithm::RSASignatureMessagePKCS1v15SHA1 => {
+                    kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA1
+                }
+                KeyAlgorithm::RSASignatureMessagePKCS1v15SHA224 => {
+                    kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA224
+                }
+                KeyAlgorithm::RSASignatureMessagePKCS1v15SHA256 => {
+                    kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA256
+                }
+                KeyAlgorithm::RSASignatureMessagePKCS1v15SHA384 => {
+                    kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA384
+                }
+                KeyAlgorithm::RSASignatureMessagePKCS1v15SHA512 => {
+                    kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512
+                }
+                KeyAlgorithm::RSASignatureDigestPSSSHA1 => {
+                    kSecKeyAlgorithmRSASignatureDigestPSSSHA1
+                }
+                KeyAlgorithm::RSASignatureDigestPSSSHA224 => {
+                    kSecKeyAlgorithmRSASignatureDigestPSSSHA224
+                }
+                KeyAlgorithm::RSASignatureDigestPSSSHA256 => {
+                    kSecKeyAlgorithmRSASignatureDigestPSSSHA256
+                }
+                KeyAlgorithm::RSASignatureDigestPSSSHA384 => {
+                    kSecKeyAlgorithmRSASignatureDigestPSSSHA384
+                }
+                KeyAlgorithm::RSASignatureDigestPSSSHA512 => {
+                    kSecKeyAlgorithmRSASignatureDigestPSSSHA512
+                }
+                KeyAlgorithm::RSASignatureMessagePSSSHA1 => {
+                    kSecKeyAlgorithmRSASignatureMessagePSSSHA1
+                }
+                KeyAlgorithm::RSASignatureMessagePSSSHA224 => {
+                    kSecKeyAlgorithmRSASignatureMessagePSSSHA224
+                }
+                KeyAlgorithm::RSASignatureMessagePSSSHA256 => {
+                    kSecKeyAlgorithmRSASignatureMessagePSSSHA256
+                }
+                KeyAlgorithm::RSASignatureMessagePSSSHA384 => {
+                    kSecKeyAlgorithmRSASignatureMessagePSSSHA384
+                }
+                KeyAlgorithm::RSASignatureMessagePSSSHA512 => {
+                    kSecKeyAlgorithmRSASignatureMessagePSSSHA512
+                }
+                // Use that RSA signature message for everything else
+                _ => {
+                    kSecKeyAlgorithmRSASignatureMessagePSSSHA512
+                }
+            });
+
+            #[cfg(target_os = "macos")]
+            return CFString::wrap_under_get_rule(match self {
                 KeyAlgorithm::ECIESEncryptionStandardX963SHA1AESGCM => {
                     kSecKeyAlgorithmECIESEncryptionStandardX963SHA1AESGCM
                 }
@@ -445,7 +540,7 @@ impl KeyAlgorithm {
                 KeyAlgorithm::RSASignatureMessagePSSSHA512 => {
                     kSecKeyAlgorithmRSASignatureMessagePSSSHA512
                 }
-            })
+            });
         }
     }
 }

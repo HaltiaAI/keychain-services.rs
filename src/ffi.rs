@@ -192,6 +192,7 @@ extern "C" {
     pub(crate) static kSecAttrKeyClassPrivate: CFStringRef;
     pub(crate) static kSecAttrKeyClassSymmetric: CFStringRef;
     pub(crate) static kSecAttrKeyType: CFStringRef;
+    #[cfg(target_os = "macos")]
     pub(crate) static kSecAttrKeyTypeAES: CFStringRef;
     pub(crate) static kSecAttrKeyTypeRSA: CFStringRef;
     pub(crate) static kSecAttrKeyTypeECSECPrimeRandom: CFStringRef;
