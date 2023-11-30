@@ -43,9 +43,6 @@
 #![allow(non_snake_case, non_upper_case_globals)]
 #![deny(missing_docs, unused_import_braces, unused_qualifications)]
 
-#[cfg(not(target_os = "macos"))]
-compile_error!("This crate presently only compiles on macOS (see GH issue #5 for iOS support)");
-
 #[macro_use]
 extern crate core_foundation;
 
