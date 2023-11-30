@@ -569,8 +569,8 @@ impl AttrKeyType {
         unsafe {
             #[cfg(not(target_os = "macos"))]
             return CFString::wrap_under_get_rule(match self {
-                AttrKeyType::Aes => kSecAttrKeyTypeAES,
                 AttrKeyType::Rsa => kSecAttrKeyTypeRSA,
+                AttrKeyType::EcSecPrimeRandom => kSecAttrKeyTypeECSECPrimeRandom,
                 // Use RSA for everything else, as, for example, AES symbol is not available for iOS
                 _ => kSecAttrKeyTypeRSA,
             });
